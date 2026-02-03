@@ -46,4 +46,4 @@ Code Layout
 Notes
 - The ETL pipeline supports CSV, CSV.GZ, and Parquet inputs.
 - Make sure `POSTGRES_ENGINE_URI` and database names align with the DB used in `src/etl_pipeline.py` and `src/one_time_load.py`.
-- Note: All metadata and the data dictionary are available at `https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page`.
+- Note: All metadata and the data dictionary are available at [nyc.gov.tlc.trip.records](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page).
