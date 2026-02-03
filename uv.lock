@@ -11,6 +11,12 @@ resolution-markers = [
 ]
 
 [[package]]
+name = "amazon-ion"
+version = "0.13.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/35/61/689d4400a2f51cd2b118014b11063c6baafda3484ea5440c7cab1ec1944e/amazon.ion-0.13.0.tar.gz", hash = "sha256:18a41d3f1192e287ada981dd833af7b2d9cdc8406f3fbb1b54558b0ce36e85be", size = 796475, upload-time = "2025-01-10T23:22:19.169Z" }
+
+[[package]]
 name = "anyio"
 version = "4.12.1"
 source = { registry = "https://pypi.org/simple" }
@@ -311,6 +317,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "dotenv" },
+    { name = "kestra" },
     { name = "pandas" },
     { name = "psycopg2" },
     { name = "pyarrow" },
@@ -327,6 +334,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "dotenv", specifier = ">=0.9.9" },
+    { name = "kestra", specifier = ">=1.2.0" },
     { name = "pandas", specifier = ">=3.0.0" },
     { name = "psycopg2", specifier = ">=2.9.11" },
     { name = "pyarrow", specifier = ">=23.0.0" },
@@ -850,6 +858,20 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/26/2d/ef58fed122b268c69c0aa099da20bc67657cdfb2e222688d5731bd5b971d/jupyterlab_widgets-3.0.16.tar.gz", hash = "sha256:423da05071d55cf27a9e602216d35a3a65a3e41cdf9c5d3b643b814ce38c19e0", size = 897423, upload-time = "2025-11-01T21:11:29.724Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ab/b5/36c712098e6191d1b4e349304ef73a8d06aed77e56ceaac8c0a306c7bda1/jupyterlab_widgets-3.0.16-py3-none-any.whl", hash = "sha256:45fa36d9c6422cf2559198e4db481aa243c7a32d9926b500781c830c80f7ecf8", size = 914926, upload-time = "2025-11-01T21:11:28.008Z" },
+]
+
+[[package]]
+name = "kestra"
+version = "1.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "amazon-ion" },
+    { name = "python-dateutil" },
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/70/32/9965bf84aaa9b0afddeb8a9d9b0853d65d219ab68a8fc1e18f490146e840/kestra-1.2.0.tar.gz", hash = "sha256:29f65f9d422848c2fdbeaeb058ba1e01c22c82fe352039a1428c680cef71c1af", size = 11320, upload-time = "2026-01-13T12:36:13.554Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/bb/ac/3a76812e190d12e7c3e1238253f42f65e5735942112ef8c671c771103477/kestra-1.2.0-py3-none-any.whl", hash = "sha256:96d74c3ed5a8ec685306628dcc12f084e824efd32259db664641079cc2eb0d5f", size = 9052, upload-time = "2026-01-13T12:36:12.427Z" },
 ]
 
 [[package]]

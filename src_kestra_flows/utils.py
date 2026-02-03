@@ -11,33 +11,31 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-
 def get_yellow_trip_schema() -> str:
     """Returns the SQL schema for the yellow taxi trip data table."""
 
-    schema_sql = f"""
-    CREATE TABLE yellow_taxi_data (
-    	vendor_id INTEGER, 
-    	pickup_datetime TIMESTAMP WITHOUT TIME ZONE, 
-    	dropoff_datetime TIMESTAMP WITHOUT TIME ZONE, 
-    	passenger_count INTEGER, 
-    	trip_distance_miles FLOAT(53), 
-    	rate_code_id INTEGER, 
-    	store_and_forward_flag TEXT, 
-    	pickup_location_id INTEGER, 
-    	dropoff_location_id INTEGER, 
-    	payment_type INTEGER, 
-    	fare_amount FLOAT(53), 
-    	extra FLOAT(53), 
-    	mta_tax FLOAT(53), 
-    	tip_amount FLOAT(53), 
-    	tolls_amount FLOAT(53), 
-    	improvement_surcharge FLOAT(53), 
-    	total_amount FLOAT(53), 
-    	congestion_surcharge FLOAT(53), 
-    	trip_duration_secs INTEGER
-    )
-    """
+    schema_sql = '''CREATE TABLE yellow_taxi_data (
+                        vendor_id INTEGER, 
+                        pickup_datetime TIMESTAMP WITHOUT TIME ZONE, 
+                        dropoff_datetime TIMESTAMP WITHOUT TIME ZONE, 
+                        passenger_count INTEGER, 
+                        trip_distance_miles FLOAT(53), 
+                        rate_code_id INTEGER, 
+                        store_and_forward_flag TEXT, 
+                        pickup_location_id INTEGER, 
+                        dropoff_location_id INTEGER, 
+                        payment_type INTEGER, 
+                        fare_amount FLOAT(53), 
+                        extra FLOAT(53), 
+                        mta_tax FLOAT(53), 
+                        tip_amount FLOAT(53), 
+                        tolls_amount FLOAT(53), 
+                        improvement_surcharge FLOAT(53), 
+                        total_amount FLOAT(53), 
+                        congestion_surcharge FLOAT(53), 
+                        trip_duration_secs INTEGER
+                        )
+                  '''
 
     return schema_sql
 
@@ -46,32 +44,31 @@ def get_yellow_trip_schema() -> str:
 def get_green_trip_schema() -> str:
     """Returns the SQL schema for the green taxi trip data table."""
 
-    schema_sql = f"""
-    CREATE TABLE green_taxi_data (
-        vendor_id INTEGER, 
-        pickup_datetime TIMESTAMP WITHOUT TIME ZONE, 
-        dropoff_datetime TIMESTAMP WITHOUT TIME ZONE, 
-        store_and_forward_flag TEXT, 
-        rate_code_id INTEGER, 
-        pickup_location_id INTEGER, 
-        dropoff_location_id INTEGER, 
-        passenger_count FLOAT(53), 
-        trip_distance_miles FLOAT(53), 
-        fare_amount FLOAT(53), 
-        extra FLOAT(53), 
-        mta_tax FLOAT(53), 
-        tip_amount FLOAT(53), 
-        tolls_amount FLOAT(53), 
-        ehail_fee FLOAT(53), 
-        improvement_surcharge FLOAT(53), 
-        total_amount FLOAT(53), 
-        payment_type FLOAT(53), 
-        trip_type FLOAT(53), 
-        congestion_surcharge FLOAT(53), 
-        cbd_congestion_fee FLOAT(53), 
-        trip_duration_secs INTEGER
-    )
-    """
+    schema_sql = '''CREATE TABLE green_taxi_data (
+                    vendor_id INTEGER, 
+                    pickup_datetime TIMESTAMP WITHOUT TIME ZONE, 
+                    dropoff_datetime TIMESTAMP WITHOUT TIME ZONE, 
+                    store_and_forward_flag TEXT, 
+                    rate_code_id INTEGER, 
+                    pickup_location_id INTEGER, 
+                    dropoff_location_id INTEGER, 
+                    passenger_count FLOAT(53), 
+                    trip_distance_miles FLOAT(53), 
+                    fare_amount FLOAT(53), 
+                    extra FLOAT(53), 
+                    mta_tax FLOAT(53), 
+                    tip_amount FLOAT(53), 
+                    tolls_amount FLOAT(53), 
+                    ehail_fee FLOAT(53), 
+                    improvement_surcharge FLOAT(53), 
+                    total_amount FLOAT(53), 
+                    payment_type FLOAT(53), 
+                    trip_type FLOAT(53), 
+                    congestion_surcharge FLOAT(53), 
+                    cbd_congestion_fee FLOAT(53), 
+                    trip_duration_secs INTEGER
+                  )
+                  '''
 
     return schema_sql
 

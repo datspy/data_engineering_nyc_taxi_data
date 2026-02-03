@@ -4,7 +4,16 @@
 from sqlalchemy import create_engine
 import pandas as pd
 
-engine = create_engine("postgresql://pguser:pgpassword@localhost:5432/nyc_taxi")
+
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+env_file = os.path.join(parent_dir, ".env")
+load_dotenv(os.path.join(env_file))
+
+user= os.getenv("POSTGRES_USER")
+password= os.getenv("POSTGRES_PASSWORD")
+postgres_engine = fr'postgresql://{user}:{password}@localhost:5432/nyc_taxi'
+engine = create_engine(postgres_engine)
+
 ```
 
 ## Question 3. Counting short trips

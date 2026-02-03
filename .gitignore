@@ -1,2 +1,9 @@
 ## Excluding environment variable files
 .env
+
+## Excluding log files
+*.log
+
+
+## Excluding test files
+test.py

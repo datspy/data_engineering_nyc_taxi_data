@@ -7,25 +7,19 @@ from utils import create_table_if_not_exists, load_to_postgres
 import logging
 
 
-parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
-env_file = os.path.join(parent_dir, ".env")
-
-load_dotenv(os.path.join(env_file))
-
-
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 # Database configuration
-DB_URI = os.getenv("POSTGRES_ENGINE_URI")
+DB_URI = 'postgresql://pguser:pgpassword@localhost:5432/nyc_taxi'
 engine = create_engine(DB_URI)
 
 DB_CONFIG = {
     'host': 'localhost',
     'database': 'nyc_taxi',
-    'user': os.getenv("POSTGRES_USER"),
-    'password': os.getenv("POSTGRES_PASSWORD"),
+    'user': 'pguser',
+    'password': 'pgpassword',
     'port': 5432
 }
 

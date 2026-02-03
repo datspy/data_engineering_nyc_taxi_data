@@ -2,20 +2,14 @@ import pandas as pd
 import requests
 from io import StringIO, BytesIO
 from typing import Iterator, Dict, Any
-import logging
+import logging   
 import gzip
-from dotenv import load_dotenv
 from sqlalchemy import create_engine, inspect
 import os
 import utils as utils
 import pyarrow.parquet as pq
 from one_time_load import zone_data_etl
 
-
-parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
-env_file = os.path.join(parent_dir, ".env")
-
-load_dotenv(os.path.join(env_file))
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -46,15 +40,15 @@ DTYPE_FLOAT_COLS = [
 ]
 
 # Database configuration
-DB_URI = os.getenv("POSTGRES_ENGINE_URI")
+DB_URI ='postgresql://pguser:pgpassword@localhost:5432/nyc_taxi'
 engine = create_engine(DB_URI)
 
 
 DB_CONFIG = {
     'host': 'localhost',
     'database': 'nyc_taxi',
-    'user': os.getenv("POSTGRES_USER"),
-    'password': os.getenv("POSTGRES_PASSWORD"),
+    'user': 'pguser',
+    'password': 'pgpassword',
     'port': 5432
 }
 
