@@ -37,6 +37,11 @@ services:
             username: kestra
             password: k3str4
         kestra:
+          ai:
+            type: "gemini"
+            gemini:
+              api-key: "AIzaSyCMFFAgl8lmTP9qw69SoqVWPrSDTgf_KuE"
+              model-name: gemini-2.5-flash
           server:
             basicAuth:
               username: "admin@kestra.io"

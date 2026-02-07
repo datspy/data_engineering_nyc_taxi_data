@@ -7,8 +7,8 @@ inputs:
   - id: taxi
     type: SELECT
     displayName: Select taxi type
-    values: [green, yellow]
-    defaults: green
+    values: [yellow, green]
+    defaults: yellow
 
   - id: year
     type: SELECT
@@ -28,12 +28,18 @@ variables:
   staging_table: "public.{{inputs.taxi}}_tripdata_staging"
   table: "public.{{inputs.taxi}}_tripdata"
   zone_lookup_table: "public.taxi_zone_lookup"
-  data: "{{outputs.transform.outputFiles[inputs.taxi ~ '_tripdata_transformed.csv']}}"
-  zone_data: "{{outputs.extract.outputFiles['taxi_zone_lookup.csv']}}"     
+  data: "{{outputs.transform.outputFiles[inputs.taxi ~ '_tripdata_' ~ inputs.year ~ '-' ~ inputs.month ~ '.csv']}}"
+  zone_data: "{{outputs.extract.outputFiles[taxi_zone_lookup.csv]}}"     
   zone_url: "https://d37ci6vzurychx.cloudfront.net/misc/taxi_zone_lookup.csv"
 
 
 tasks:
+  - id: set_label
+    type: io.kestra.plugin.core.execution.Labels
+    labels:
+      file: "{{render(vars.file)}}"
+      taxi: "{{inputs.taxi}}"  
+
   - id: extract
     type: io.kestra.plugin.scripts.shell.Commands
     outputFiles:
@@ -43,22 +49,31 @@ tasks:
     commands:
       - wget -qO- https://github.com/DataTalksClub/nyc-tlc-data/releases/download/{{inputs.taxi}}/{{render(vars.file)}}.gz | gunzip > {{render(vars.file)}}
       - wget -qO- {{ vars.zone_url }} > {{render(vars.zone_file)}}
+
+  - id: build
+    type: io.kestra.plugin.docker.Build
+    dockerfile: |
+      FROM python:3.10
+      RUN pip install --upgrade pip
+      RUN pip install -r requirements.txt
+    tags:
+      - python_image
     
   - id: transform
     type: io.kestra.plugin.scripts.python.Commands    
-    inputFiles:      
+    inputFiles:
+      zone: "{{inputs.taxi}}"
       data_file: "{{ outputs.extract.outputFiles[render(vars.file)] }}"
     outputFiles:
-      - "*.csv"
+      - "{{inputs.taxi}}_tripdata_transformed.csv"
     namespaceFiles:
       enabled: true    
     taskRunner:
       type: io.kestra.plugin.scripts.runner.docker.Docker
-      pullPolicy: IF_NOT_PRESENT
-    containerImage: python:slim    
-    commands:
-      - pip install -r requirements.txt      
-      - python etl_pipeline.py data_file {{inputs.taxi}}
+      pullPolicy: NEVER
+    containerImage: "{{ outputs.build.imageId }}"    
+    commands:      
+      - python etl_pipeline.py data_file zone
 
   - id: create_zone_lookup_table
     type: io.kestra.plugin.jdbc.postgresql.Queries
@@ -75,7 +90,8 @@ tasks:
     format: CSV
     from: "{{render(vars.zone_data)}}"
     table: "{{render(vars.zone_lookup_table)}}"
-    header: true  
+    header: true
+    columns: [location_id,borough,zone,service_zone]
 
 
   - id: if_yellow_taxi
@@ -158,8 +174,8 @@ tasks:
               COALESCE(CAST(vendor_id AS text), '') ||
               COALESCE(CAST(pickup_datetime AS text), '') || 
               COALESCE(CAST(dropoff_datetime AS text), '') || 
-              COALESCE(pickup_location_id, null) || 
-              COALESCE(dropoff_location_id, null) || 
+              COALESCE(pickup_location_id, '') || 
+              COALESCE(dropoff_location_id, '') || 
               COALESCE(CAST(fare_amount AS text), '') || 
               COALESCE(CAST(trip_distance_miles AS text), '')      
             ),
@@ -269,8 +285,8 @@ tasks:
               COALESCE(CAST(vendor_id AS text), '') ||
               COALESCE(CAST(pickup_datetime AS text), '') || 
               COALESCE(CAST(dropoff_datetime AS text), '') || 
-              COALESCE(pickup_location_id, null) || 
-              COALESCE(dropoff_location_id, null) || 
+              COALESCE(pickup_location_id, '') || 
+              COALESCE(dropoff_location_id, '') || 
               COALESCE(CAST(fare_amount AS text), '') || 
               COALESCE(CAST(trip_distance_miles AS text), '')      
             ),
