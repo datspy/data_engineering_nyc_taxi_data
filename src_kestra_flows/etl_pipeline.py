@@ -21,6 +21,7 @@ DTYPE_INT_COLS = [
     "PULocationID",
     "DOLocationID",
     "payment_type",
+    "trip_type"
 ]
 
 DTYPE_FLOAT_COLS = [
@@ -32,7 +33,7 @@ DTYPE_FLOAT_COLS = [
     "tolls_amount",
     "improvement_surcharge",
     "total_amount",
-    "congestion_surcharge",
+    "congestion_surcharge"
 ]
 
 

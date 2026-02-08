@@ -1,5 +1,7 @@
 ## Excluding environment variable files
 .env
+.env_encoded
+service-account.json
 
 ## Excluding log files
 *.log

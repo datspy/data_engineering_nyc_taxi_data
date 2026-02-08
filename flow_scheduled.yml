@@ -1,4 +1,4 @@
-id: postgres_nyc_taxi
+id: postgres_nyc_taxi_scheduled
 namespace: zoomcamp
 description: |
   The CSV Data used in the course: https://github.com/DataTalksClub/nyc-tlc-data/releases
@@ -10,20 +10,8 @@ inputs:
     values: [green, yellow]
     defaults: green
 
-  - id: year
-    type: SELECT
-    displayName: Select year
-    values: ["2019", "2020"]
-    defaults: "2019"
-
-  - id: month
-    type: SELECT
-    displayName: Select month
-    values: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
-    defaults: "01"
-
 variables:
-  file: "{{inputs.taxi}}_tripdata_{{inputs.year}}-{{inputs.month}}.csv"
+  file: "{{inputs.taxi}}_tripdata_{{trigger.date | date('yyyy-MM')}}.csv"
   zone_file: "taxi_zone_lookup.csv"
   staging_table: "public.{{inputs.taxi}}_tripdata_staging"
   table: "public.{{inputs.taxi}}_tripdata"
@@ -34,6 +22,12 @@ variables:
 
 
 tasks:
+  - id: set_label
+    type: io.kestra.plugin.core.execution.Labels
+    labels:
+      file: "{{render(vars.file)}}"
+      taxi: "{{inputs.taxi}}"
+
   - id: extract
     type: io.kestra.plugin.scripts.shell.Commands
     outputFiles:
@@ -60,22 +54,22 @@ tasks:
       - pip install -r requirements.txt      
       - python etl_pipeline.py data_file {{inputs.taxi}}
 
-  - id: create_zone_lookup_table
-    type: io.kestra.plugin.jdbc.postgresql.Queries
-    sql: |
-      CREATE TABLE IF NOT EXISTS taxi_zone_lookup (
-          location_id            integer,
-          borough                text,
-          zone                   text,
-          service_zone           text
-      );
+  # - id: create_zone_lookup_table
+  #   type: io.kestra.plugin.jdbc.postgresql.Queries
+  #   sql: |
+  #     CREATE TABLE IF NOT EXISTS taxi_zone_lookup (
+  #         location_id            integer,
+  #         borough                text,
+  #         zone                   text,
+  #         service_zone           text
+  #     );
   
-  - id: copy_in_to_zone_lookup_table
-    type: io.kestra.plugin.jdbc.postgresql.CopyIn
-    format: CSV
-    from: "{{render(vars.zone_data)}}"
-    table: "{{render(vars.zone_lookup_table)}}"
-    header: true  
+  # - id: copy_in_to_zone_lookup_table
+  #   type: io.kestra.plugin.jdbc.postgresql.CopyIn
+  #   format: CSV
+  #   from: "{{render(vars.zone_data)}}"
+  #   table: "{{render(vars.zone_lookup_table)}}"
+  #   header: true  
 
 
   - id: if_yellow_taxi
@@ -303,6 +297,19 @@ tasks:
 pluginDefaults:
   - type: io.kestra.plugin.jdbc.postgresql
     values:
-      url: jdbc:postgresql://kestra_postgres:5432/kestra
-      username: kestra
-      password: k3str4
+      url: jdbc:postgresql://kestra_postgres:5432/nyc_taxi
+      username: "{{ kv('POSTGRES_USER') }}"
+      password: "{{ kv('POSTGRES_PASSWORD') }}"
+
+triggers:
+  - id: green_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 9 1 * *"
+    inputs:
+      taxi: green
+
+  - id: yellow_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 10 1 * *"
+    inputs:
+      taxi: yellow
