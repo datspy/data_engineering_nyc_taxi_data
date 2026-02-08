@@ -186,7 +186,7 @@ tasks:
         sql: |
           CREATE OR REPLACE EXTERNAL TABLE `{{kv('GCP_PROJECT_ID')}}.{{render(vars.table)}}_ext`
           (
-              vendor_id STRING OPTIONS (description = 'A code indicating the LPEP provider that provided the record. 1= Creative Mobile Technologies, LLC; 2= VeriFone Inc.'),
+              vendor_id INTEGER OPTIONS (description = 'A code indicating the LPEP provider that provided the record. 1= Creative Mobile Technologies, LLC; 2= VeriFone Inc.'),
               pickup_datetime TIMESTAMP OPTIONS (description = 'The date and time when the meter was engaged'),
               dropoff_datetime TIMESTAMP OPTIONS (description = 'The date and time when the meter was disengaged'),
               store_and_fwd_flag STRING OPTIONS (description = 'This flag indicates whether the trip record was held in vehicle memory before sending to the vendor, aka "store and forward," because the vehicle did not have a connection to the server. Y= store and forward trip N= not a store and forward trip'),
@@ -249,10 +249,13 @@ tasks:
 pluginDefaults:
   - type: io.kestra.plugin.gcp
     values:
-      serviceAccount: "{{secret('GCP_CREDS')}}"
+      serviceAccount: "{{ secret('GCP_CREDS') }}"
       projectId: "{{kv('GCP_PROJECT_ID')}}"
       location: "{{kv('GCP_LOCATION')}}"
       bucket: "{{kv('GCP_BUCKET_NAME')}}"
+  - type: io.kestra.plugin.gcp.bigquery.Query
+    values:
+      serviceAccount: "{{ secret('GCP_CREDS') }}"
 
 triggers:
   - id: green_schedule

@@ -312,16 +312,3 @@ pluginDefaults:
       url: jdbc:postgresql://kestra_postgres:5432/nyc_taxi
       username: "{{ kv('POSTGRES_USER') }}"
       password: "{{ kv('POSTGRES_PASSWORD') }}"
-
-triggers:
-  - id: green_schedule
-    type: io.kestra.plugin.core.trigger.Schedule
-    cron: "0 9 1 * *"
-    inputs:
-      taxi: green
-
-  - id: yellow_schedule
-    type: io.kestra.plugin.core.trigger.Schedule
-    cron: "0 10 1 * *"
-    inputs:
-      taxi: yellow
