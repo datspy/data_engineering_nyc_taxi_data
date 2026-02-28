@@ -9,3 +9,6 @@ service-account.json
 
 ## Excluding test files
 test.py
+
+## Excluding bruin configuration files
+.bruin.yml
